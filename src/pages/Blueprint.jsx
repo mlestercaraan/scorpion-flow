@@ -216,7 +216,7 @@ export default function Blueprint() {
             transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
             className="absolute inset-0 overflow-y-auto"
           >
-            <div ref={contentRef} className="max-w-5xl mx-auto px-6 lg:px-12 py-10">
+            <div ref={contentRef} className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
               <slide.Component {...slide.props} />
             </div>
           </motion.div>
