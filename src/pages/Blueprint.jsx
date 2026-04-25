@@ -30,14 +30,14 @@ const SLIDES = [
     label: 'Lead Pipeline',
     description: 'The stages a contact moves through from first touch to qualified opportunity. Click a stage to see entry criteria, required actions, and HubSpot implications.',
     Component: PipelineSection,
-    props: { id: 'lead-pipeline', number: '03', title: 'Lead Pipeline', stages: LEAD_STAGES, description: 'The stages a contact moves through from first touch to qualified opportunity. Click a stage to see entry criteria, required actions, and HubSpot implications.' },
+    props: { id: 'lead-pipeline', number: '03', title: 'Lead Pipeline', stages: LEAD_STAGES, description: 'The stages a contact moves through from first touch to qualified opportunity. Click a stage to see entry criteria, required actions, and HubSpot implications.', hubspotUrl: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-136/views/all/board?noprefetch=' },
   },
   {
     id: 'deal-pipeline',
     label: 'Deal Pipeline',
     description: 'The stages an opportunity moves through from qualified lead to closed won or lost. Click a stage to review the detail.',
     Component: PipelineSection,
-    props: { id: 'deal-pipeline', number: '04', title: 'Deal Pipeline', stages: DEAL_STAGES, description: 'The stages an opportunity moves through from qualified lead to closed won or lost. Click a stage to review the detail.' },
+    props: { id: 'deal-pipeline', number: '04', title: 'Deal Pipeline', stages: DEAL_STAGES, description: 'The stages an opportunity moves through from qualified lead to closed won or lost. Click a stage to review the detail.', hubspotUrl: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-3/views/all/board?noprefetch=' },
   },
   {
     id: 'automations',
