@@ -61,7 +61,7 @@ export default function LeadSourcesSection() {
   const [expanded, setExpanded] = useState(null);
 
   return (
-    <section id="lead-sources">
+    <section>
       <SectionHeader number="02" title="Lead Sources" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {SOURCES.map((source, i) => (

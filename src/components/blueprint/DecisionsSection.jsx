@@ -29,7 +29,7 @@ export default function DecisionsSection() {
   };
 
   return (
-    <section id="decisions">
+    <section>
       <SectionHeader number="08" title="Live Decisions & Action Items" />
 
       <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">

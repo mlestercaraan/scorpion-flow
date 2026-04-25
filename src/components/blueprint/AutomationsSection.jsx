@@ -50,7 +50,7 @@ const PRIORITY_STYLES = {
 
 export default function AutomationsSection() {
   return (
-    <section id="automations">
+    <section>
       <SectionHeader number="05" title="Automation Priorities" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {AUTOMATIONS.map((item, i) => {

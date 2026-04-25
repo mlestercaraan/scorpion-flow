@@ -32,7 +32,7 @@ const ICP_DATA = [
 
 export default function ICPSection() {
   return (
-    <section id="icp">
+    <section>
       <SectionHeader number="01" title="Ideal Customer Profile" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {ICP_DATA.map((card, i) => (

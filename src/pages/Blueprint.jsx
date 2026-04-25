@@ -1,7 +1,6 @@
-import React from 'react';
-import BlueprintHeader from '@/components/blueprint/BlueprintHeader';
-import StickyNav from '@/components/blueprint/StickyNav';
-import Sidebar from '@/components/blueprint/Sidebar';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Printer } from 'lucide-react';
 import ICPSection from '@/components/blueprint/ICPSection';
 import LeadSourcesSection from '@/components/blueprint/LeadSourcesSection';
 import PipelineSection from '@/components/blueprint/PipelineSection';
@@ -11,53 +10,197 @@ import ResourcesSection from '@/components/blueprint/ResourcesSection';
 import DecisionsSection from '@/components/blueprint/DecisionsSection';
 import { LEAD_STAGES, DEAL_STAGES } from '@/components/blueprint/pipelineData';
 
+const SLIDES = [
+  {
+    id: 'icp',
+    label: 'ICP',
+    component: <ICPSection />,
+  },
+  {
+    id: 'lead-sources',
+    label: 'Lead Sources',
+    component: <LeadSourcesSection />,
+  },
+  {
+    id: 'lead-pipeline',
+    label: 'Lead Pipeline',
+    component: (
+      <PipelineSection
+        id="lead-pipeline"
+        number="03"
+        title="Lead Pipeline"
+        stages={LEAD_STAGES}
+      />
+    ),
+  },
+  {
+    id: 'deal-pipeline',
+    label: 'Deal Pipeline',
+    component: (
+      <PipelineSection
+        id="deal-pipeline"
+        number="04"
+        title="Deal Pipeline"
+        stages={DEAL_STAGES}
+      />
+    ),
+  },
+  {
+    id: 'automations',
+    label: 'Automations',
+    component: <AutomationsSection />,
+  },
+  {
+    id: 'build-priorities',
+    label: 'Build Priorities',
+    component: <BuildPrioritiesSection />,
+  },
+  {
+    id: 'resources',
+    label: 'Resources',
+    component: <ResourcesSection />,
+  },
+  {
+    id: 'decisions',
+    label: 'Decisions',
+    component: <DecisionsSection />,
+  },
+];
+
+const variants = {
+  enter: (dir) => ({
+    x: dir > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (dir) => ({
+    x: dir > 0 ? '-100%' : '100%',
+    opacity: 0,
+  }),
+};
+
 export default function Blueprint() {
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+  const go = useCallback((index) => {
+    setDirection(index > current ? 1 : -1);
+    setCurrent(index);
+  }, [current]);
+
+  const prev = useCallback(() => {
+    if (current > 0) go(current - 1);
+  }, [current, go]);
+
+  const next = useCallback(() => {
+    if (current < SLIDES.length - 1) go(current + 1);
+  }, [current, go]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [next, prev]);
+
   return (
-    <div className="min-h-screen bg-background">
-      <BlueprintHeader />
-      <StickyNav />
+    <div className="h-screen w-screen flex flex-col bg-background overflow-hidden">
 
-      <div className="max-w-6xl mx-auto px-4 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-16">
-              <Sidebar />
-            </div>
-          </div>
-
-          {/* Main content */}
-          <div className="lg:col-span-3 space-y-14">
-            <ICPSection />
-            <LeadSourcesSection />
-            <PipelineSection
-              id="lead-pipeline"
-              number="03"
-              title="Lead Pipeline"
-              stages={LEAD_STAGES}
-            />
-            <PipelineSection
-              id="deal-pipeline"
-              number="04"
-              title="Deal Pipeline"
-              stages={DEAL_STAGES}
-            />
-            <AutomationsSection />
-            <BuildPrioritiesSection />
-            <ResourcesSection />
-            <DecisionsSection />
-          </div>
+      {/* Top bar */}
+      <div className="flex-shrink-0 flex items-center justify-between px-6 py-3 border-b border-border bg-card">
+        <div>
+          <span className="text-sm font-bold text-foreground">Royer</span>
+          <span className="text-sm text-muted-foreground"> × </span>
+          <span className="text-sm font-bold text-secondary">Serendipity</span>
+          <span className="mx-2 text-border">·</span>
+          <span className="text-xs text-muted-foreground">HubSpot Customer Journey Blueprint</span>
         </div>
+        <button
+          onClick={() => window.print()}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Printer className="w-3.5 h-3.5" />
+          Export
+        </button>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 mt-12 no-print">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-xs text-muted-foreground">
-            Royer × Serendipity · HubSpot Customer Journey Blueprint · Confidential
-          </p>
+      {/* Tab nav */}
+      <div className="flex-shrink-0 flex items-center gap-1 px-6 py-2 bg-card border-b border-border overflow-x-auto">
+        {SLIDES.map((slide, i) => (
+          <button
+            key={slide.id}
+            onClick={() => go(i)}
+            className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+              current === i
+                ? 'bg-primary text-primary-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            {slide.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Slide content */}
+      <div className="flex-1 relative overflow-hidden">
+        <AnimatePresence custom={direction} mode="wait">
+          <motion.div
+            key={current}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+            className="absolute inset-0 overflow-y-auto"
+          >
+            <div className="max-w-5xl mx-auto px-6 lg:px-12 py-10">
+              {SLIDES[current].component}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom navigation */}
+      <div className="flex-shrink-0 flex items-center justify-between px-6 py-3 border-t border-border bg-card">
+        <button
+          onClick={prev}
+          disabled={current === 0}
+          className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Previous
+        </button>
+
+        {/* Dot indicators */}
+        <div className="flex items-center gap-1.5">
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => go(i)}
+              className={`rounded-full transition-all ${
+                i === current
+                  ? 'w-5 h-2 bg-primary'
+                  : 'w-2 h-2 bg-border hover:bg-muted-foreground'
+              }`}
+            />
+          ))}
         </div>
-      </footer>
+
+        <button
+          onClick={next}
+          disabled={current === SLIDES.length - 1}
+          className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        >
+          Next
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }

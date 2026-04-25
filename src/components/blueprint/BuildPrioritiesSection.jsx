@@ -57,7 +57,7 @@ const PHASES = [
 
 export default function BuildPrioritiesSection() {
   return (
-    <section id="build-priorities">
+    <section>
       <SectionHeader number="06" title="Build Priorities" />
       <Accordion type="multiple" defaultValue={['phase-1']} className="space-y-3">
         {PHASES.map((phase) => (

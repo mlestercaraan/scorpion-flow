@@ -18,7 +18,7 @@ const RESOURCES = [
 
 export default function ResourcesSection() {
   return (
-    <section id="resources">
+    <section>
       <SectionHeader number="07" title="Resources" />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {RESOURCES.map((r, i) => (
