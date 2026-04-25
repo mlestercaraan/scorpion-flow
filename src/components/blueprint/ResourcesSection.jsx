@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
+import { EditableText } from './EditableText';
 import {
-  ExternalLink, Layout, FolderKanban, FileText, Mail, Globe, Video, Search, Linkedin
+  ExternalLink, Layout, FolderKanban, FileText, Mail, Globe, Video, Search, Linkedin, Link
 } from 'lucide-react';
 
-const RESOURCES = [
+const INITIAL_RESOURCES = [
   { icon: Layout, title: 'HubSpot Portal', url: '#', color: 'bg-orange-500/10 text-orange-600' },
   { icon: FolderKanban, title: 'Teamwork Project', url: '#', color: 'bg-purple-500/10 text-purple-600' },
   { icon: FileText, title: 'ICP Document', url: '#', color: 'bg-blue-500/10 text-blue-600' },
@@ -17,28 +18,56 @@ const RESOURCES = [
 ];
 
 export default function ResourcesSection() {
+  const [resources, setResources] = useState(INITIAL_RESOURCES);
+
+  const updateResource = (i, field, val) => {
+    const next = [...resources];
+    next[i] = { ...next[i], [field]: val };
+    setResources(next);
+  };
+
   return (
     <section>
       <SectionHeader number="07" title="Resources" />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-        {RESOURCES.map((r, i) => (
-          <motion.a
-            key={r.title}
-            href={r.url}
-            target="_blank"
-            rel="noopener noreferrer"
+        {resources.map((r, i) => (
+          <motion.div
+            key={i}
             initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.04 }}
-            className="group bg-card rounded-xl border border-border p-4 shadow-sm hover:shadow-md hover:border-secondary/30 transition-all flex flex-col items-center text-center gap-2.5"
+            className="group bg-card rounded-xl border border-border p-4 shadow-sm hover:shadow-md hover:border-secondary/30 transition-all flex flex-col items-center text-center gap-2"
           >
-            <span className={`w-10 h-10 rounded-xl flex items-center justify-center ${r.color}`}>
+            <span className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${r.color}`}>
               <r.icon className="w-5 h-5" />
             </span>
-            <span className="text-xs font-semibold text-foreground">{r.title}</span>
-            <ExternalLink className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-          </motion.a>
+            <EditableText
+              value={r.title}
+              onChange={(val) => updateResource(i, 'title', val)}
+              className="text-xs font-semibold text-foreground text-center"
+            />
+            {/* URL edit row */}
+            <div className="flex items-center gap-1 w-full">
+              <Link className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+              <input
+                value={r.url === '#' ? '' : r.url}
+                onChange={(e) => updateResource(i, 'url', e.target.value || '#')}
+                placeholder="Paste URL..."
+                className="text-[10px] text-muted-foreground bg-transparent outline-none border-b border-transparent focus:border-secondary/40 w-full truncate"
+              />
+            </div>
+            {r.url !== '#' && (
+              <a
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-[10px] text-secondary hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ExternalLink className="w-3 h-3" /> Open
+              </a>
+            )}
+          </motion.div>
         ))}
       </div>
     </section>

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
-import { Calendar, MailCheck, UserX, UserCheck, BookOpen, AlertTriangle, Zap } from 'lucide-react';
+import { EditableText } from './EditableText';
+import { Calendar, MailCheck, UserX, UserCheck, BookOpen, AlertTriangle } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const AUTOMATIONS = [
+const INITIAL = [
   {
     icon: Calendar,
     title: 'QBR Scheduling Drip',
@@ -49,31 +51,56 @@ const PRIORITY_STYLES = {
 };
 
 export default function AutomationsSection() {
+  const [items, setItems] = useState(INITIAL);
+
+  const update = (i, field, val) => {
+    const next = [...items];
+    next[i] = { ...next[i], [field]: val };
+    setItems(next);
+  };
+
   return (
     <section>
       <SectionHeader number="05" title="Automation Priorities" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {AUTOMATIONS.map((item, i) => {
+        {items.map((item, i) => {
           const style = PRIORITY_STYLES[item.priority];
           return (
             <motion.div
-              key={item.title}
+              key={i}
               initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
               className={`rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow ${style.bg}`}
             >
               <div className="flex items-start justify-between mb-3">
-                <span className="w-9 h-9 rounded-lg bg-card flex items-center justify-center shadow-sm">
-                  <item.icon className="w-4.5 h-4.5 text-foreground" />
+                <span className="w-9 h-9 rounded-lg bg-card flex items-center justify-center shadow-sm flex-shrink-0">
+                  <item.icon className="w-4 h-4 text-foreground" />
                 </span>
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${style.badge}`}>
-                  {style.label}
-                </span>
+                <Select value={item.priority} onValueChange={(val) => update(i, 'priority', val)}>
+                  <SelectTrigger className={`h-6 text-[10px] font-bold uppercase tracking-wider px-2 rounded-full border-0 w-auto ${style.badge}`}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="quick-win">Quick Win</SelectItem>
+                    <SelectItem value="priority">Priority</SelectItem>
+                    <SelectItem value="risk">Caution</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <h4 className="text-sm font-bold text-foreground mb-1.5">{item.title}</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+              <div className="mb-1.5">
+                <EditableText
+                  value={item.title}
+                  onChange={(val) => update(i, 'title', val)}
+                  className="text-sm font-bold text-foreground"
+                />
+              </div>
+              <EditableText
+                value={item.description}
+                onChange={(val) => update(i, 'description', val)}
+                className="text-xs text-muted-foreground leading-relaxed w-full block"
+                multiline
+              />
             </motion.div>
           );
         })}
