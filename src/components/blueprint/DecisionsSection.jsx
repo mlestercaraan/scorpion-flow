@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { SectionHeader } from './ICPSection';
 import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ const INITIAL_ROWS = [
 ];
 
 export default function DecisionsSection() {
-  const [rows, setRows] = useState(INITIAL_ROWS);
+  const [rows, setRows] = useAutoSave('blueprint_decisions', INITIAL_ROWS);
   const [nextId, setNextId] = useState(4);
 
   const updateRow = (id, field, value) => {

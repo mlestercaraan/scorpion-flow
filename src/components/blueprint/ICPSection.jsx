@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { motion } from 'framer-motion';
 import { Building2, Users, MapPin, ShieldCheck, Plus } from 'lucide-react';
 import { EditableText, EditableTag } from './EditableText';
@@ -45,7 +46,7 @@ const INITIAL_ICP = [
 ];
 
 export default function ICPSection() {
-  const [data, setData] = useState(INITIAL_ICP);
+  const [data, setData] = useAutoSave('blueprint_icp', INITIAL_ICP);
 
   const updateTitle = (i, val) => {
     const next = [...data];

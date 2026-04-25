@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
 import { EditableText } from './EditableText';
@@ -22,7 +23,7 @@ const FIELDS = [
 ];
 
 export default function PipelineSection({ id, number, title, stages: initialStages, description, hubspotUrl }) {
-  const [stages, setStages] = useState(initialStages);
+  const [stages, setStages] = useAutoSave(`blueprint_pipeline_${id}`, initialStages);
   const [selected, setSelected] = useState(null);
   const activeStage = stages.find(s => s.name === selected);
 

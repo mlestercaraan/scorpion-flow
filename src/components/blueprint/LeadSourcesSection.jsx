@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
 import { EditableText } from './EditableText';
@@ -59,8 +60,8 @@ const INITIAL_SOURCES = [
 ];
 
 export default function LeadSourcesSection() {
-  const [sources, setSources] = useState(INITIAL_SOURCES);
-  const [expanded, setExpanded] = useState(null);
+  const [sources, setSources] = useAutoSave('blueprint_lead_sources', INITIAL_SOURCES);
+  const [expanded, setExpanded] = React.useState(null);
 
   const update = (i, field, val) => {
     const next = [...sources];

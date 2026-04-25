@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { motion } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
 import { EditableText } from './EditableText';
@@ -20,7 +21,7 @@ const INITIAL_RESOURCES = [
 ];
 
 export default function ResourcesSection() {
-  const [resources, setResources] = useState(INITIAL_RESOURCES);
+  const [resources, setResources] = useAutoSave('blueprint_resources', INITIAL_RESOURCES);
 
   const updateResource = (i, field, val) => {
     const next = [...resources];

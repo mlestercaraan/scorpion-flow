@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { SectionHeader } from './ICPSection';
 import { EditableText } from './EditableText';
 import {
@@ -54,7 +55,7 @@ const INITIAL_PHASES = [
 ];
 
 export default function BuildPrioritiesSection() {
-  const [phases, setPhases] = useState(INITIAL_PHASES);
+  const [phases, setPhases] = useAutoSave('blueprint_build_priorities', INITIAL_PHASES);
 
   const updateItem = (phaseIdx, itemIdx, val) => {
     const next = [...phases];

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { motion } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
 import { EditableText } from './EditableText';
@@ -51,7 +52,7 @@ const PRIORITY_STYLES = {
 };
 
 export default function AutomationsSection() {
-  const [items, setItems] = useState(INITIAL);
+  const [items, setItems] = useAutoSave('blueprint_automations', INITIAL);
 
   const update = (i, field, val) => {
     const next = [...items];
