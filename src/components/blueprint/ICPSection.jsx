@@ -74,7 +74,7 @@ export default function ICPSection() {
 
   return (
     <section>
-      <SectionHeader number="01" title="Ideal Customer Profile" />
+      <SectionHeader number="01" title="Ideal Customer Profile" description="Who Royer is targeting: the verticals, company sizes, geographies, and qualification signals that define a great-fit prospect." />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {data.map((card, i) => (
           <motion.div
@@ -130,20 +130,25 @@ export default function ICPSection() {
   );
 }
 
-export function SectionHeader({ number, title, onTitleChange }) {
+export function SectionHeader({ number, title, onTitleChange, description }) {
   return (
-    <div className="flex items-center gap-3 mb-6">
-      <span className="text-xs font-bold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full flex-shrink-0">
-        {number}
-      </span>
-      {onTitleChange ? (
-        <EditableText
-          value={title}
-          onChange={onTitleChange}
-          className="text-xl lg:text-2xl font-bold text-foreground"
-        />
-      ) : (
-        <h2 className="text-xl lg:text-2xl font-bold text-foreground">{title}</h2>
+    <div className="mb-6">
+      <div className="flex items-center gap-3 mb-2">
+        <span className="text-xs font-bold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full flex-shrink-0">
+          {number}
+        </span>
+        {onTitleChange ? (
+          <EditableText
+            value={title}
+            onChange={onTitleChange}
+            className="text-xl lg:text-2xl font-bold text-foreground"
+          />
+        ) : (
+          <h2 className="text-xl lg:text-2xl font-bold text-foreground">{title}</h2>
+        )}
+      </div>
+      {description && (
+        <p className="text-sm text-muted-foreground leading-relaxed ml-1">{description}</p>
       )}
     </div>
   );

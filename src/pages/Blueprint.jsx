@@ -30,14 +30,14 @@ const SLIDES = [
     label: 'Lead Pipeline',
     description: 'The stages a contact moves through from first touch to qualified opportunity. Click a stage to see entry criteria, required actions, and HubSpot implications.',
     Component: PipelineSection,
-    props: { id: 'lead-pipeline', number: '03', title: 'Lead Pipeline', stages: LEAD_STAGES },
+    props: { id: 'lead-pipeline', number: '03', title: 'Lead Pipeline', stages: LEAD_STAGES, description: 'The stages a contact moves through from first touch to qualified opportunity. Click a stage to see entry criteria, required actions, and HubSpot implications.' },
   },
   {
     id: 'deal-pipeline',
     label: 'Deal Pipeline',
     description: 'The stages an opportunity moves through from qualified lead to closed won or lost. Click a stage to review the detail.',
     Component: PipelineSection,
-    props: { id: 'deal-pipeline', number: '04', title: 'Deal Pipeline', stages: DEAL_STAGES },
+    props: { id: 'deal-pipeline', number: '04', title: 'Deal Pipeline', stages: DEAL_STAGES, description: 'The stages an opportunity moves through from qualified lead to closed won or lost. Click a stage to review the detail.' },
   },
   {
     id: 'automations',
@@ -217,10 +217,6 @@ export default function Blueprint() {
             className="absolute inset-0 overflow-y-auto"
           >
             <div ref={contentRef} className="max-w-5xl mx-auto px-6 lg:px-12 py-10">
-              {/* Section description */}
-              <p className="text-sm text-muted-foreground mb-6 leading-relaxed max-w-2xl">
-                {slide.description}
-              </p>
               <slide.Component {...slide.props} />
             </div>
           </motion.div>

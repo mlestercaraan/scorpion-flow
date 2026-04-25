@@ -84,7 +84,7 @@ export default function BuildPrioritiesSection() {
 
   return (
     <section>
-      <SectionHeader number="06" title="Build Priorities" />
+      <SectionHeader number="06" title="Build Priorities" description="The phased implementation plan: what gets built first, what comes next, and what is on the horizon." />
       <Accordion type="multiple" defaultValue={['phase-1']} className="space-y-3">
         {phases.map((phase, phaseIdx) => (
           <AccordionItem

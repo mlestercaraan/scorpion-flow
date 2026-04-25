@@ -30,7 +30,7 @@ export default function DecisionsSection() {
 
   return (
     <section>
-      <SectionHeader number="08" title="Live Decisions & Action Items" />
+      <SectionHeader number="08" title="Live Decisions & Action Items" description="Live action items and decisions captured during this session. Track owner, priority, due date, and status." />
 
       <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
         {/* Header */}

@@ -70,7 +70,7 @@ export default function LeadSourcesSection() {
 
   return (
     <section>
-      <SectionHeader number="02" title="Lead Sources" />
+      <SectionHeader number="02" title="Lead Sources" description="Where leads come from: the channels, tools, and strategies that feed contacts into the pipeline." />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {sources.map((source, i) => (
           <motion.div

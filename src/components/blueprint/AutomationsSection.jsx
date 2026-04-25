@@ -61,7 +61,7 @@ export default function AutomationsSection() {
 
   return (
     <section>
-      <SectionHeader number="05" title="Automation Priorities" />
+      <SectionHeader number="05" title="Automation Priorities" description="The highest-value automations to build in HubSpot, prioritized by impact and implementation complexity." />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((item, i) => {
           const style = PRIORITY_STYLES[item.priority];

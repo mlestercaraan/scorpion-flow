@@ -28,7 +28,7 @@ export default function ResourcesSection() {
 
   return (
     <section>
-      <SectionHeader number="07" title="Resources" />
+      <SectionHeader number="07" title="Resources" description="Quick links to key tools, documents, and platforms referenced throughout this engagement." />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {resources.map((r, i) => (
           <motion.div

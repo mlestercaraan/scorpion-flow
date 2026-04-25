@@ -4,7 +4,7 @@ import { SectionHeader } from './ICPSection';
 import { EditableText } from './EditableText';
 import { ChevronRight, ArrowRight } from 'lucide-react';
 
-export default function PipelineSection({ id, number, title, stages: initialStages }) {
+export default function PipelineSection({ id, number, title, stages: initialStages, description }) {
   const [stages, setStages] = useState(initialStages);
   const [selected, setSelected] = useState(null);
   const activeStage = stages.find(s => s.name === selected);
@@ -22,7 +22,7 @@ export default function PipelineSection({ id, number, title, stages: initialStag
 
   return (
     <section id={id}>
-      <SectionHeader number={number} title={title} />
+      <SectionHeader number={number} title={title} description={description} />
 
       {/* Pipeline stages */}
       <div className="flex items-center gap-0 overflow-x-auto pb-2 mb-6">
