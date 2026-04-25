@@ -11,27 +11,26 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80', // cybersecurity/shield
 ];
 
+// Icons are kept separate — they can't be serialized to localStorage
+const CARD_ICONS = [Building2, Users, MapPin, ShieldCheck];
+
 const INITIAL_ICP = [
   {
-    icon: Building2,
     title: 'Primary Verticals',
     image: IMAGES[0],
     items: ['Financial Advisors & RIAs', 'CPA Firms & Accounting Practices', 'Wealth Managers & Fiduciaries', 'Fiduciary Offices'],
   },
   {
-    icon: Users,
     title: 'Company Size',
     image: IMAGES[1],
     items: ['5–50 employees', 'Small, owner-led firms', 'No dedicated in-house IT'],
   },
   {
-    icon: MapPin,
     title: 'Geography',
     image: IMAGES[2],
     items: ['Frederick, MD (HQ)', 'DMV Region', 'Maryland', 'Northern Virginia', 'Washington D.C.'],
   },
   {
-    icon: ShieldCheck,
     title: 'Qualification Signals',
     image: IMAGES[3],
     items: [
@@ -97,7 +96,7 @@ export default function ICPSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               <div className="absolute bottom-0 left-0 p-3 flex items-center gap-2">
                 <span className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <card.icon className="w-3.5 h-3.5 text-white" />
+                  {React.createElement(CARD_ICONS[i], { className: 'w-3.5 h-3.5 text-white' })}
                 </span>
                 <EditableText
                   value={card.title}
