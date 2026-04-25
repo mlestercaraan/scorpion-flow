@@ -10,12 +10,13 @@ const INITIAL_RESOURCES = [
   { icon: Layout, title: 'HubSpot Portal', url: 'https://app-na2.hubspot.com/contacts/245123419/', color: 'bg-orange-500/10 text-orange-600' },
   { icon: FolderKanban, title: 'Lead Pipeline (HubSpot)', url: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-136/views/all/board?noprefetch=', color: 'bg-orange-500/10 text-orange-600' },
   { icon: FolderKanban, title: 'Deal Pipeline (HubSpot)', url: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-3/views/all/board?noprefetch=', color: 'bg-emerald-500/10 text-emerald-600' },
+  { icon: Globe, title: 'Royer Website', url: 'https://www.royernetworks.com/', color: 'bg-slate-500/10 text-slate-600' },
+  { icon: Globe, title: 'Schedule Assessment', url: 'https://meetings-na2.hubspot.com/st-royer/schedule-free-assessment', color: 'bg-secondary/10 text-secondary' },
+  { icon: Linkedin, title: 'LinkedIn (S. Royer)', url: 'https://www.linkedin.com/in/stroyeriv/', color: 'bg-sky-500/10 text-sky-600' },
   { icon: FileText, title: 'ICP Document', url: '#', color: 'bg-blue-500/10 text-blue-600' },
   { icon: Mail, title: 'Current Sequences', url: '#', color: 'bg-violet-500/10 text-violet-600' },
-  { icon: Globe, title: 'Royer Website', url: '#', color: 'bg-slate-500/10 text-slate-600' },
   { icon: Video, title: 'Kickoff Recording', url: '#', color: 'bg-red-500/10 text-red-600' },
   { icon: Search, title: 'Google Ads', url: '#', color: 'bg-amber-500/10 text-amber-600' },
-  { icon: Linkedin, title: 'LinkedIn', url: '#', color: 'bg-sky-500/10 text-sky-600' },
 ];
 
 export default function ResourcesSection() {
