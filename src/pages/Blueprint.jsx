@@ -14,16 +14,19 @@ const SLIDES = [
   {
     id: 'icp',
     label: 'ICP',
+    description: 'Who Royer is targeting — the verticals, company sizes, geographies, and qualification signals that define a great-fit prospect.',
     component: <ICPSection />,
   },
   {
     id: 'lead-sources',
     label: 'Lead Sources',
+    description: 'Where leads come from — the channels, tools, and strategies that feed contacts into the pipeline.',
     component: <LeadSourcesSection />,
   },
   {
     id: 'lead-pipeline',
     label: 'Lead Pipeline',
+    description: 'The stages a contact moves through from first touch to qualified opportunity. Click a stage to see entry criteria, required actions, and HubSpot implications.',
     component: (
       <PipelineSection
         id="lead-pipeline"
@@ -36,6 +39,7 @@ const SLIDES = [
   {
     id: 'deal-pipeline',
     label: 'Deal Pipeline',
+    description: 'The stages an opportunity moves through from qualified lead to closed won or lost. Click a stage to review the detail.',
     component: (
       <PipelineSection
         id="deal-pipeline"
@@ -48,21 +52,25 @@ const SLIDES = [
   {
     id: 'automations',
     label: 'Automations',
+    description: 'The highest-value automations to build in HubSpot — prioritized by impact and implementation complexity.',
     component: <AutomationsSection />,
   },
   {
     id: 'build-priorities',
     label: 'Build Priorities',
+    description: "The phased implementation plan — what gets built first, what comes next, and what's on the horizon.",
     component: <BuildPrioritiesSection />,
   },
   {
     id: 'resources',
     label: 'Resources',
+    description: 'Quick links to key tools, documents, and platforms referenced throughout this engagement.',
     component: <ResourcesSection />,
   },
   {
     id: 'decisions',
     label: 'Decisions',
+    description: 'Live action items and decisions captured during this session — track owner, priority, due date, and status.',
     component: <DecisionsSection />,
   },
 ];
@@ -144,6 +152,13 @@ export default function Blueprint() {
             {slide.label}
           </button>
         ))}
+      </div>
+
+      {/* Slide description */}
+      <div className="flex-shrink-0 px-6 py-2.5 bg-muted/50 border-b border-border">
+        <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl">
+          {SLIDES[current].description}
+        </p>
       </div>
 
       {/* Slide content */}
