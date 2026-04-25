@@ -1,218 +1,263 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeader } from './ICPSection';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { AUTOMATION_WORKFLOWS } from './automationWorkflows';
+import WorkflowDiagram from './WorkflowDiagram';
+import WorkflowWizard from './WorkflowWizard';
 import {
-  Calendar, MailCheck, UserX, UserCheck, BookOpen, AlertTriangle,
-  Zap, Clock, GitBranch, CheckCircle2, XCircle, ChevronDown, ChevronUp
+  Calendar, MailCheck, UserX, UserCheck, BookOpen, AlertTriangle, Sparkles,
+  Plus, Pencil, Trash2, MoreVertical, Copy
 } from 'lucide-react';
-
-const ICONS = {
-  qbr: Calendar,
-  outbound: MailCheck,
-  inactive: UserX,
-  assignment: UserCheck,
-  playbook: BookOpen,
-  caution: AlertTriangle,
-};
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const PRIORITY_STYLES = {
-  'quick-win': { badge: 'bg-secondary text-white', dot: 'bg-secondary', label: 'Quick Win' },
-  'priority': { badge: 'bg-accent text-white', dot: 'bg-accent', label: 'Priority' },
-  'risk': { badge: 'bg-destructive text-white', dot: 'bg-destructive', label: 'Caution' },
+  'quick-win': { badge: 'bg-secondary text-white', label: 'Quick Win', ring: 'border-l-secondary' },
+  'priority':  { badge: 'bg-accent text-white', label: 'Priority', ring: 'border-l-accent' },
+  'risk':      { badge: 'bg-destructive text-white', label: 'Caution', ring: 'border-l-destructive' },
 };
 
-const STEP_CONFIG = {
-  action: { icon: Zap, color: 'bg-primary/10 border-primary/20 text-primary', lineColor: 'bg-primary/20', label: 'Action' },
-  delay: { icon: Clock, color: 'bg-amber-500/10 border-amber-400/20 text-amber-600', lineColor: 'bg-amber-400/20', label: 'Delay' },
-  condition: { icon: GitBranch, color: 'bg-violet-500/10 border-violet-400/20 text-violet-600', lineColor: 'bg-violet-400/20', label: 'Condition' },
-  end: { icon: CheckCircle2, color: 'bg-muted border-border text-muted-foreground', lineColor: 'bg-border', label: 'End' },
+const PRESET_ICONS = {
+  qbr: Calendar, outbound: MailCheck, inactive: UserX,
+  assignment: UserCheck, playbook: BookOpen, caution: AlertTriangle,
 };
 
-function WorkflowStep({ step, index, isLast }) {
-  const [open, setOpen] = useState(false);
-  const cfg = STEP_CONFIG[step.type];
-  const Icon = cfg.icon;
-
-  return (
-    <div className="flex flex-col items-center">
-      {/* Connector line from above */}
-      {index > 0 && (
-        <div className={`w-0.5 h-6 ${cfg.lineColor}`} />
-      )}
-
-      {/* Step card */}
-      <div className="w-full max-w-sm">
-        <button
-          onClick={() => setOpen(!open)}
-          className={`w-full text-left rounded-xl border px-4 py-3 shadow-sm hover:shadow-md transition-all ${cfg.color} ${open ? 'shadow-md' : ''}`}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              <div>
-                <span className="text-[9px] font-bold uppercase tracking-widest opacity-60 block">{cfg.label}</span>
-                <span className="text-sm font-semibold">{step.label}</span>
-              </div>
-            </div>
-            {open ? <ChevronUp className="w-3.5 h-3.5 opacity-50 flex-shrink-0" /> : <ChevronDown className="w-3.5 h-3.5 opacity-50 flex-shrink-0" />}
-          </div>
-        </button>
-
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <div className="px-4 pt-2 pb-3 text-xs text-muted-foreground leading-relaxed bg-card rounded-b-xl border border-t-0 border-border">
-                {step.detail}
-                {step.type === 'condition' && step.yes && (
-                  <div className="mt-2 flex flex-col gap-1">
-                    <span className="flex items-center gap-1.5 text-secondary font-medium">
-                      <CheckCircle2 className="w-3 h-3" /> Yes → {step.yes}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-destructive font-medium">
-                      <XCircle className="w-3 h-3" /> No → {step.no}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Connector line below (unless last) */}
-      {!isLast && (
-        <div className={`w-0.5 h-6 ${STEP_CONFIG[step.type].lineColor}`} />
-      )}
-    </div>
-  );
+function getIcon(workflow) {
+  return PRESET_ICONS[workflow.key] || Sparkles;
 }
 
-function WorkflowDiagram({ workflow }) {
-  const [triggerOpen, setTriggerOpen] = useState(false);
-
-  return (
-    <div className="flex flex-col items-center py-6 px-4 overflow-y-auto">
-      {/* Trigger */}
-      <div className="w-full max-w-sm mb-1">
-        <button
-          onClick={() => setTriggerOpen(!triggerOpen)}
-          className="w-full text-left rounded-xl border-2 border-secondary bg-secondary/10 px-4 py-3 shadow-sm hover:shadow-md transition-all"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <Zap className="w-4 h-4 text-secondary flex-shrink-0" />
-              <div>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-secondary block">Trigger</span>
-                <span className="text-sm font-semibold text-foreground">{workflow.trigger.label}</span>
-              </div>
-            </div>
-            {triggerOpen ? <ChevronUp className="w-3.5 h-3.5 text-secondary flex-shrink-0" /> : <ChevronDown className="w-3.5 h-3.5 text-secondary flex-shrink-0" />}
-          </div>
-        </button>
-        <AnimatePresence>
-          {triggerOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <div className="px-4 pt-2 pb-3 text-xs text-muted-foreground leading-relaxed bg-card rounded-b-xl border border-t-0 border-secondary/20">
-                {workflow.trigger.detail}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Steps */}
-      {workflow.steps.map((step, i) => (
-        <WorkflowStep key={i} step={step} index={i} isLast={i === workflow.steps.length - 1} />
-      ))}
-    </div>
-  );
+// Merge presets + saved custom workflows
+function mergeWorkflows(saved) {
+  const presets = AUTOMATION_WORKFLOWS.map(w => ({ ...w, isPreset: true }));
+  return [...presets, ...(saved || [])];
 }
 
 export default function AutomationsSection() {
-  const [selected, setSelected] = useState(AUTOMATION_WORKFLOWS[0].key);
-  const activeWorkflow = AUTOMATION_WORKFLOWS.find(w => w.key === selected);
+  const [customWorkflows, setCustomWorkflows] = useAutoSave('blueprint_custom_workflows', []);
+  const [selectedKey, setSelectedKey] = useState(AUTOMATION_WORKFLOWS[0].key);
+  const [showWizard, setShowWizard] = useState(false);
+  const [editingWorkflow, setEditingWorkflow] = useState(null);
+
+  const allWorkflows = mergeWorkflows(customWorkflows);
+  const activeWorkflow = allWorkflows.find(w => w.key === selectedKey) || allWorkflows[0];
+
+  const handleWizardComplete = (newWorkflow) => {
+    if (editingWorkflow) {
+      // Replace edited workflow
+      setCustomWorkflows(customWorkflows.map(w =>
+        w.key === editingWorkflow.key ? { ...newWorkflow, key: editingWorkflow.key } : w
+      ));
+      setSelectedKey(editingWorkflow.key);
+    } else {
+      setCustomWorkflows([...customWorkflows, newWorkflow]);
+      setSelectedKey(newWorkflow.key);
+    }
+    setShowWizard(false);
+    setEditingWorkflow(null);
+  };
+
+  const handleDelete = (key) => {
+    setCustomWorkflows(customWorkflows.filter(w => w.key !== key));
+    if (selectedKey === key) setSelectedKey(AUTOMATION_WORKFLOWS[0].key);
+  };
+
+  const handleDuplicate = (workflow) => {
+    const copy = {
+      ...workflow,
+      key: `custom_${Date.now()}`,
+      title: `${workflow.title} (Copy)`,
+      isCustom: true,
+      isPreset: false,
+    };
+    setCustomWorkflows([...customWorkflows, copy]);
+    setSelectedKey(copy.key);
+  };
+
+  const handleEdit = (workflow) => {
+    setEditingWorkflow(workflow);
+    setShowWizard(true);
+  };
+
+  const priorityStyle = PRIORITY_STYLES[activeWorkflow?.priority] || PRIORITY_STYLES['priority'];
 
   return (
     <section>
-      <SectionHeader
-        number="05"
-        title="Automation Priorities"
-        description="Select an automation to see the HubSpot workflow diagram. Click each step for details."
-      />
+      <div className="flex items-center justify-between mb-0">
+        <SectionHeader
+          number="05"
+          title="Automation Workflows"
+          description="Select a workflow to see its HubSpot diagram. Create custom workflows with the AI builder."
+        />
+        <button
+          onClick={() => { setEditingWorkflow(null); setShowWizard(true); }}
+          className="flex-shrink-0 flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm hover:bg-secondary/90 transition-all mb-6"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          New Workflow
+        </button>
+      </div>
 
-      <div className="flex gap-0 bg-card rounded-xl border border-border shadow-sm overflow-hidden min-h-[540px]">
+      <div className="flex gap-0 bg-card rounded-xl border border-border shadow-sm overflow-hidden min-h-[560px]">
+
         {/* Sidebar — 25% */}
-        <div className="w-1/4 border-r border-border flex flex-col">
-          <div className="px-3 py-2.5 border-b border-border bg-muted/40">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Workflows</span>
+        <div className="w-1/4 border-r border-border flex flex-col min-w-0">
+          {/* Presets */}
+          <div className="px-3 py-2 border-b border-border bg-muted/40 flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Preset Templates</span>
           </div>
-          <div className="flex flex-col flex-1">
-            {AUTOMATION_WORKFLOWS.map((w) => {
-              const Icon = ICONS[w.key];
-              const style = PRIORITY_STYLES[w.priority];
-              const isActive = selected === w.key;
-              return (
-                <button
-                  key={w.key}
-                  onClick={() => setSelected(w.key)}
-                  className={`w-full text-left px-3 py-3 flex items-start gap-2.5 border-b border-border transition-all ${
-                    isActive ? 'bg-primary/5 border-l-2 border-l-primary' : 'hover:bg-muted/50'
-                  }`}
-                >
-                  <span className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isActive ? 'bg-primary/10' : 'bg-muted'}`}>
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+          {AUTOMATION_WORKFLOWS.map(w => {
+            const Icon = getIcon(w);
+            const style = PRIORITY_STYLES[w.priority];
+            const isActive = selectedKey === w.key;
+            return (
+              <button
+                key={w.key}
+                onClick={() => setSelectedKey(w.key)}
+                className={`w-full text-left px-3 py-2.5 flex items-start gap-2.5 border-b border-border transition-all ${
+                  isActive ? 'bg-primary/5 border-l-[3px] border-l-primary' : 'hover:bg-muted/50 border-l-[3px] border-l-transparent'
+                }`}
+              >
+                <span className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isActive ? 'bg-primary/10' : 'bg-muted'}`}>
+                  <Icon className={`w-3 h-3 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <span className={`text-xs font-semibold leading-tight block truncate ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {w.title}
                   </span>
-                  <div className="min-w-0">
-                    <span className={`text-xs font-semibold leading-tight block ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
-                      {w.title}
-                    </span>
-                    <span className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 inline-block px-1.5 py-0.5 rounded-full ${style.badge}`}>
-                      {style.label}
-                    </span>
+                  <span className={`text-[9px] font-bold uppercase tracking-wider mt-0.5 inline-block px-1.5 py-0.5 rounded-full ${style.badge}`}>
+                    {style.label}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+
+          {/* Custom workflows */}
+          {customWorkflows.length > 0 && (
+            <>
+              <div className="px-3 py-2 border-b border-t border-border bg-muted/40 mt-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">My Workflows</span>
+              </div>
+              {customWorkflows.map(w => {
+                const Icon = getIcon(w);
+                const style = PRIORITY_STYLES[w.priority] || PRIORITY_STYLES['priority'];
+                const isActive = selectedKey === w.key;
+                return (
+                  <div
+                    key={w.key}
+                    className={`flex items-start gap-2.5 border-b border-border transition-all ${
+                      isActive ? 'bg-primary/5 border-l-[3px] border-l-secondary' : 'hover:bg-muted/50 border-l-[3px] border-l-transparent'
+                    }`}
+                  >
+                    <button
+                      onClick={() => setSelectedKey(w.key)}
+                      className="flex-1 text-left px-3 py-2.5 flex items-start gap-2.5 min-w-0"
+                    >
+                      <span className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isActive ? 'bg-secondary/10' : 'bg-muted'}`}>
+                        <Icon className={`w-3 h-3 ${isActive ? 'text-secondary' : 'text-muted-foreground'}`} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <span className={`text-xs font-semibold leading-tight block truncate ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                          {w.title}
+                        </span>
+                        <span className={`text-[9px] font-bold uppercase tracking-wider mt-0.5 inline-block px-1.5 py-0.5 rounded-full ${style.badge}`}>
+                          {style.label}
+                        </span>
+                      </div>
+                    </button>
+                    {/* Actions menu */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="p-1.5 mt-2 mr-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0">
+                          <MoreVertical className="w-3 h-3" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="text-xs">
+                        <DropdownMenuItem onClick={() => handleEdit(w)} className="gap-2">
+                          <Pencil className="w-3 h-3" /> Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleDuplicate(w)} className="gap-2">
+                          <Copy className="w-3 h-3" /> Duplicate
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleDelete(w.key)} className="gap-2 text-destructive">
+                          <Trash2 className="w-3 h-3" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
-                </button>
-              );
-            })}
+                );
+              })}
+            </>
+          )}
+
+          {/* Create CTA at bottom */}
+          <div className="mt-auto p-3 border-t border-border">
+            <button
+              onClick={() => { setEditingWorkflow(null); setShowWizard(true); }}
+              className="w-full flex items-center justify-center gap-1.5 text-xs font-medium text-secondary border border-dashed border-secondary/40 rounded-xl py-2 hover:bg-secondary/5 transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" /> New Workflow
+            </button>
           </div>
         </div>
 
-        {/* Workflow diagram — 75% */}
-        <div className="w-3/4 overflow-y-auto bg-muted/20">
-          <div className="px-5 py-3 border-b border-border bg-card flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-foreground">{activeWorkflow.title}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{activeWorkflow.description}</p>
+        {/* Diagram panel — 75% */}
+        <div className="w-3/4 flex flex-col overflow-hidden bg-muted/20">
+          {/* Panel header */}
+          <div className="px-5 py-3 border-b border-border bg-card flex items-center justify-between flex-shrink-0">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-foreground truncate">{activeWorkflow?.title}</h3>
+                {activeWorkflow?.isCustom && (
+                  <span className="text-[9px] font-bold bg-secondary/10 text-secondary px-1.5 py-0.5 rounded-full flex-shrink-0">AI-Generated</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{activeWorkflow?.description}</p>
             </div>
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full flex-shrink-0 ${PRIORITY_STYLES[activeWorkflow.priority].badge}`}>
-              {PRIORITY_STYLES[activeWorkflow.priority].label}
-            </span>
+            <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+              <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${priorityStyle.badge}`}>
+                {priorityStyle.label}
+              </span>
+              {activeWorkflow?.isCustom && (
+                <button
+                  onClick={() => handleEdit(activeWorkflow)}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground bg-muted px-2.5 py-1 rounded-lg transition-colors"
+                >
+                  <Pencil className="w-3 h-3" /> Edit
+                </button>
+              )}
+            </div>
           </div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selected}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <WorkflowDiagram workflow={activeWorkflow} />
-            </motion.div>
-          </AnimatePresence>
+
+          {/* Diagram */}
+          <div className="flex-1 overflow-y-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedKey}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <WorkflowDiagram workflow={activeWorkflow} />
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
+
+      {/* Wizard modal */}
+      <AnimatePresence>
+        {showWizard && (
+          <WorkflowWizard
+            onComplete={handleWizardComplete}
+            onClose={() => { setShowWizard(false); setEditingWorkflow(null); }}
+            editingWorkflow={editingWorkflow}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
