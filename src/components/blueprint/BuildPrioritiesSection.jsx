@@ -7,12 +7,14 @@ import {
 } from '@/components/ui/accordion';
 import { Layers, Zap, Rocket, Plus, Trash2 } from 'lucide-react';
 
+// Icons kept separate — cannot be serialized to localStorage
+const PHASE_ICONS = [Layers, Zap, Rocket];
+const PHASE_COLORS = ['text-primary', 'text-secondary', 'text-accent'];
+
 const INITIAL_PHASES = [
   {
     id: 'phase-1',
-    icon: Layers,
     title: 'Phase 1: Foundation',
-    color: 'text-primary',
     items: [
       'Import and clean contact database',
       'Set up lead pipeline stages in HubSpot',
@@ -25,9 +27,7 @@ const INITIAL_PHASES = [
   },
   {
     id: 'phase-2',
-    icon: Zap,
     title: 'Phase 2: Quick Wins',
-    color: 'text-secondary',
     items: [
       'Build QBR scheduling automation',
       'Create first outbound email sequence',
@@ -39,9 +39,7 @@ const INITIAL_PHASES = [
   },
   {
     id: 'phase-3',
-    icon: Rocket,
     title: 'Phase 3: Expansion',
-    color: 'text-accent',
     items: [
       'Landing page buildout',
       'Google Ads integration and attribution',
@@ -95,7 +93,7 @@ export default function BuildPrioritiesSection() {
           >
             <AccordionTrigger className="px-5 py-4 hover:no-underline hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
-                <phase.icon className={`w-5 h-5 ${phase.color} flex-shrink-0`} />
+                {React.createElement(PHASE_ICONS[phaseIdx] || Layers, { className: `w-5 h-5 ${PHASE_COLORS[phaseIdx] || 'text-primary'} flex-shrink-0` })}
                 <EditableText
                   value={phase.title}
                   onChange={(val) => updatePhaseTitle(phaseIdx, val)}
