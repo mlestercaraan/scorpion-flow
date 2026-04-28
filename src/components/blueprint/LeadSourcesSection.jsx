@@ -8,9 +8,11 @@ import {
   ChevronDown, Settings, HelpCircle
 } from 'lucide-react';
 
+// Icons kept separate — cannot be serialized to localStorage
+const SOURCE_ICONS = [Globe, Linkedin, Search, FileSpreadsheet, Mail, Rocket];
+
 const INITIAL_SOURCES = [
   {
-    icon: Globe,
     title: 'Website / Landing Pages',
     color: 'bg-blue-500/10 text-blue-600',
     description: 'Royer\'s website and targeted landing pages for MSP services to financial firms.',
@@ -18,7 +20,6 @@ const INITIAL_SOURCES = [
     decision: 'Which landing pages to build first? What forms are needed? What content offers drive conversion?',
   },
   {
-    icon: Linkedin,
     title: 'LinkedIn',
     color: 'bg-sky-500/10 text-sky-600',
     description: 'Organic outreach and content marketing via LinkedIn targeting decision-makers.',
@@ -26,7 +27,6 @@ const INITIAL_SOURCES = [
     decision: 'Who owns LinkedIn outreach? Manual vs. automated? Integration with HubSpot sequences?',
   },
   {
-    icon: Search,
     title: 'Google Ads',
     color: 'bg-emerald-500/10 text-emerald-600',
     description: 'Paid search targeting MSP/IT-related keywords for financial services firms.',
@@ -34,7 +34,6 @@ const INITIAL_SOURCES = [
     decision: 'Budget allocation? Which keywords to target first? Landing page strategy?',
   },
   {
-    icon: FileSpreadsheet,
     title: 'Scraped Prospect Lists',
     color: 'bg-amber-500/10 text-amber-600',
     description: 'Curated lists from directories, associations, and industry databases.',
@@ -42,7 +41,6 @@ const INITIAL_SOURCES = [
     decision: 'How to segment imported lists? Compliance considerations? Enrichment workflow?',
   },
   {
-    icon: Mail,
     title: 'Email Sequences',
     color: 'bg-violet-500/10 text-violet-600',
     description: 'Outbound email sequences for cold and warm prospects.',
@@ -50,7 +48,6 @@ const INITIAL_SOURCES = [
     decision: 'How many sequences? What cadence? Sales vs. marketing ownership?',
   },
   {
-    icon: Rocket,
     title: 'Future Prospecting Tools',
     color: 'bg-rose-500/10 text-rose-600',
     description: 'Tools like Apollo.io or HubSpot Prospecting Agent for scaled outbound.',
@@ -88,7 +85,7 @@ export default function LeadSourcesSection() {
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-3">
                   <span className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${source.color}`}>
-                    <source.icon className="w-4 h-4" />
+                    {React.createElement(SOURCE_ICONS[i] || Globe, { className: 'w-4 h-4' })}
                   </span>
                   <EditableText
                     value={source.title}
