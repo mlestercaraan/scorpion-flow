@@ -7,17 +7,20 @@ import {
   ExternalLink, Layout, FolderKanban, FileText, Mail, Globe, Video, Search, Linkedin, Link
 } from 'lucide-react';
 
+// Icons kept separate — cannot be serialized to localStorage
+const RESOURCE_ICONS = [Layout, FolderKanban, FolderKanban, Globe, Globe, Linkedin, FileText, Mail, Video, Search];
+
 const INITIAL_RESOURCES = [
-  { icon: Layout, title: 'HubSpot Portal', url: 'https://app-na2.hubspot.com/contacts/245123419/', color: 'bg-orange-500/10 text-orange-600' },
-  { icon: FolderKanban, title: 'Lead Pipeline (HubSpot)', url: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-136/views/all/board?noprefetch=', color: 'bg-orange-500/10 text-orange-600' },
-  { icon: FolderKanban, title: 'Deal Pipeline (HubSpot)', url: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-3/views/all/board?noprefetch=', color: 'bg-emerald-500/10 text-emerald-600' },
-  { icon: Globe, title: 'Royer Website', url: 'https://www.royernetworks.com/', color: 'bg-slate-500/10 text-slate-600' },
-  { icon: Globe, title: 'Schedule Assessment', url: 'https://meetings-na2.hubspot.com/st-royer/schedule-free-assessment', color: 'bg-secondary/10 text-secondary' },
-  { icon: Linkedin, title: 'LinkedIn (S. Royer)', url: 'https://www.linkedin.com/in/stroyeriv/', color: 'bg-sky-500/10 text-sky-600' },
-  { icon: FileText, title: 'ICP Document', url: '#', color: 'bg-blue-500/10 text-blue-600' },
-  { icon: Mail, title: 'Current Sequences', url: '#', color: 'bg-violet-500/10 text-violet-600' },
-  { icon: Video, title: 'Kickoff Recording', url: '#', color: 'bg-red-500/10 text-red-600' },
-  { icon: Search, title: 'Google Ads', url: '#', color: 'bg-amber-500/10 text-amber-600' },
+  { title: 'HubSpot Portal', url: 'https://app-na2.hubspot.com/contacts/245123419/', color: 'bg-orange-500/10 text-orange-600' },
+  { title: 'Lead Pipeline (HubSpot)', url: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-136/views/all/board?noprefetch=', color: 'bg-orange-500/10 text-orange-600' },
+  { title: 'Deal Pipeline (HubSpot)', url: 'https://app-na2.hubspot.com/contacts/245123419/objects/0-3/views/all/board?noprefetch=', color: 'bg-emerald-500/10 text-emerald-600' },
+  { title: 'Royer Website', url: 'https://www.royernetworks.com/', color: 'bg-slate-500/10 text-slate-600' },
+  { title: 'Schedule Assessment', url: 'https://meetings-na2.hubspot.com/st-royer/schedule-free-assessment', color: 'bg-secondary/10 text-secondary' },
+  { title: 'LinkedIn (S. Royer)', url: 'https://www.linkedin.com/in/stroyeriv/', color: 'bg-sky-500/10 text-sky-600' },
+  { title: 'ICP Document', url: '#', color: 'bg-blue-500/10 text-blue-600' },
+  { title: 'Current Sequences', url: '#', color: 'bg-violet-500/10 text-violet-600' },
+  { title: 'Kickoff Recording', url: '#', color: 'bg-red-500/10 text-red-600' },
+  { title: 'Google Ads', url: '#', color: 'bg-amber-500/10 text-amber-600' },
 ];
 
 export default function ResourcesSection() {
@@ -42,7 +45,7 @@ export default function ResourcesSection() {
             className="group bg-card rounded-xl border border-border p-4 shadow-sm hover:shadow-md hover:border-secondary/30 transition-all flex flex-col items-center text-center gap-2"
           >
             <span className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${r.color}`}>
-              <r.icon className="w-5 h-5" />
+              {React.createElement(RESOURCE_ICONS[i] || Layout, { className: 'w-5 h-5' })}
             </span>
             <EditableText
               value={r.title}

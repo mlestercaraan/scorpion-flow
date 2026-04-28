@@ -83,7 +83,7 @@ export default function PipelineSection({ id, number, title, stages: initialStag
               {stages.map((stage, i) => (
                 <Draggable key={stage.name} draggableId={stage.name} index={i}>
                   {(drag, snapshot) => (
-                    <React.Fragment>
+                    <div className="flex items-center flex-shrink-0">
                       <div
                         ref={drag.innerRef}
                         {...drag.draggableProps}
@@ -124,7 +124,7 @@ export default function PipelineSection({ id, number, title, stages: initialStag
                       {i < stages.length - 1 && (
                         <ArrowRight className="w-5 h-5 text-border flex-shrink-0 mx-1" />
                       )}
-                    </React.Fragment>
+                    </div>
                   )}
                 </Draggable>
               ))}
