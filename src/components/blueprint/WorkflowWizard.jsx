@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft, Sparkles, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { LEAD_STAGES, DEAL_STAGES } from './pipelineData';
+import { useActiveClient } from '@/lib/SessionContext';
 
 const STEPS = [
   {
@@ -122,7 +123,7 @@ const STEPS = [
     subtitle: 'Anything else the HubSpot builder should know?',
     field: 'notes',
     type: 'textarea',
-    placeholder: 'e.g., This should only apply to RIA firms in Maryland. Owner is Steve Royer...',
+    placeholder: 'e.g., Limit to specific segments, owner, region, or compliance context...',
   },
 ];
 
@@ -130,6 +131,7 @@ export default function WorkflowWizard({ onComplete, onClose }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [generating, setGenerating] = useState(false);
+  const client = useActiveClient();
 
   const current = STEPS[step];
   const isLast = step === STEPS.length - 1;
@@ -155,16 +157,27 @@ export default function WorkflowWizard({ onComplete, onClose }) {
   const generate = async () => {
     setGenerating(true);
     try {
+      const clientName = client?.name?.trim() || 'this client';
+      const industry = client?.industry?.trim() || '';
+      const hubspotPlan = client?.hubspotPlan?.trim() || '';
+      const hubsInUse = (client?.hubspotHubs || []).filter(Boolean).join(', ');
+      const successCriteria = client?.successCriteria?.trim() || '';
+      const clientNotes = client?.notes?.trim() || '';
+
       const pipelineContext = `
 Lead Pipeline Stages: ${LEAD_STAGES.map(s => `${s.name} (${s.definition})`).join('; ')}
 Deal Pipeline Stages: ${DEAL_STAGES.map(s => `${s.name} (${s.definition})`).join('; ')}
-ICP: Financial advisors, RIAs, CPA firms, wealth managers, 5-50 employees, DMV region, compliance obligations (SEC/FINRA/GLBA/IRS).
+${industry ? `Industry: ${industry}` : ''}
+${hubspotPlan ? `HubSpot plan: ${hubspotPlan}` : ''}
+${hubsInUse ? `Hubs active: ${hubsInUse}` : ''}
+${successCriteria ? `Session success criteria: ${successCriteria}` : ''}
+${clientNotes ? `Engagement notes: ${clientNotes}` : ''}
       `.trim();
 
       const prompt = `
-You are a HubSpot workflow expert building a workflow for Royer Networks, an MSP serving financial firms.
+You are a HubSpot workflow expert building a workflow for ${clientName}${industry ? `, a company operating in ${industry}` : ''}.
 
-Context about this business:
+Context about this client:
 ${pipelineContext}
 
 User's workflow requirements:
@@ -201,7 +214,7 @@ Generate a detailed HubSpot workflow as a JSON object with this exact shape:
 Rules:
 - Include 5-10 steps that are realistic for HubSpot
 - Use specific HubSpot property names, enrollment criteria, and action types
-- Reference Royer Networks, financial firms, compliance requirements (SEC/FINRA/GLBA) where relevant
+- Reference ${clientName}${industry ? ` and ${industry}` : ''}${hubspotPlan ? `, staying within what HubSpot ${hubspotPlan} can do` : ''} where relevant
 - Make the detail fields actionable — a HubSpot admin should be able to build this exactly
 - Use delay steps where the user asked for them
 - Use condition steps where the user asked for branching
@@ -328,7 +341,7 @@ Rules:
                   onChange={e => setValue(e.target.value)}
                   placeholder={current.placeholder}
                   rows={4}
-                  className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 resize-none"
+                  className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 resize-y min-h-[100px]"
                 />
               )}
 

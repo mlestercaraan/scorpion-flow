@@ -36,7 +36,7 @@ export function EditableText({ value, onChange, className = '', multiline = fals
       onBlur: commit,
       onKeyDown: handleKey,
       placeholder,
-      className: `w-full bg-primary/5 border border-secondary/40 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-secondary/40 resize-none ${className}`,
+      className: `w-full bg-primary/5 border border-secondary/40 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-secondary/40 resize-y min-h-[60px] ${className}`,
     };
     return multiline
       ? <textarea {...shared} rows={3} />
@@ -86,7 +86,7 @@ export function EditableTag({ value, onChange, onDelete, className = '' }) {
 
   return (
     <span
-      className={`group relative text-xs bg-muted text-muted-foreground px-2.5 py-1 rounded-full cursor-pointer hover:bg-secondary/10 hover:text-secondary transition-colors flex items-center gap-1 ${className}`}
+      className={`group relative text-xs bg-secondary/8 text-foreground/85 px-2.5 py-1 rounded-full cursor-pointer hover:bg-secondary/20 hover:text-secondary transition-colors flex items-center gap-1 ${className}`}
     >
       <span onClick={() => setEditing(true)}>{value}</span>
       <button

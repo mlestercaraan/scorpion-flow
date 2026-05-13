@@ -86,7 +86,7 @@ export default function AutomationsSection() {
     <section>
       <div className="flex items-center justify-between mb-0">
         <SectionHeader
-          number="05"
+          number="06"
           title="Automation Workflows"
           description="Select a workflow to see its HubSpot diagram. Create custom workflows with the AI builder."
         />

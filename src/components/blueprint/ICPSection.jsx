@@ -3,13 +3,7 @@ import { useAutoSave } from '@/hooks/useAutoSave';
 import { motion } from 'framer-motion';
 import { Building2, Users, MapPin, ShieldCheck, Plus } from 'lucide-react';
 import { EditableText, EditableTag } from './EditableText';
-
-const IMAGES = [
-  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80', // financial/accounting
-  'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80', // team/company
-  'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80', // cityscape/geography
-  'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80', // cybersecurity/shield
-];
+import { ICP_VISUALS } from './IcpVisuals';
 
 // Icons are kept separate — they can't be serialized to localStorage
 const CARD_ICONS = [Building2, Users, MapPin, ShieldCheck];
@@ -17,22 +11,18 @@ const CARD_ICONS = [Building2, Users, MapPin, ShieldCheck];
 const INITIAL_ICP = [
   {
     title: 'Primary Verticals',
-    image: IMAGES[0],
     items: ['Financial Advisors & RIAs', 'CPA Firms & Accounting Practices', 'Wealth Managers & Fiduciaries', 'Fiduciary Offices'],
   },
   {
     title: 'Company Size',
-    image: IMAGES[1],
     items: ['5–50 employees', 'Small, owner-led firms', 'No dedicated in-house IT'],
   },
   {
     title: 'Geography',
-    image: IMAGES[2],
     items: ['Frederick, MD (HQ)', 'DMV Region', 'Maryland', 'Northern Virginia', 'Washington D.C.'],
   },
   {
     title: 'Qualification Signals',
-    image: IMAGES[3],
     items: [
       'Under SEC / FINRA oversight',
       'FTC Safeguards Rule / GLBA obligation',
@@ -76,7 +66,7 @@ export default function ICPSection() {
 
   return (
     <section>
-      <SectionHeader number="01" title="Ideal Customer Profile" description="Who Royer is targeting: the verticals, company sizes, geographies, and qualification signals that define a great-fit prospect." />
+      <SectionHeader number="02" title="Ideal Customer Profile" description="Who this client is targeting: the verticals, company sizes, geographies, and qualification signals that define a great-fit prospect." />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {data.map((card, i) => (
           <motion.div
@@ -86,14 +76,10 @@ export default function ICPSection() {
             transition={{ delay: i * 0.08 }}
             className="bg-card rounded-xl shadow-sm border border-border hover:shadow-md transition-shadow overflow-hidden"
           >
-            {/* Image banner */}
+            {/* SVG visual banner */}
             <div className="relative h-32 overflow-hidden">
-              <img
-                src={card.image}
-                alt={card.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              {React.createElement(ICP_VISUALS[i % ICP_VISUALS.length])}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
               <div className="absolute bottom-0 left-0 p-3 flex items-center gap-2">
                 <span className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
                   {React.createElement(CARD_ICONS[i], { className: 'w-3.5 h-3.5 text-white' })}
@@ -136,7 +122,7 @@ export function SectionHeader({ number, title, onTitleChange, description }) {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3 mb-2">
-        <span className="text-xs font-bold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full flex-shrink-0">
+        <span className="text-xs font-bold text-secondary bg-gradient-to-br from-secondary/20 to-secondary/5 border border-secondary/30 px-2.5 py-1 rounded-full flex-shrink-0 shadow-sm">
           {number}
         </span>
         {onTitleChange ? (

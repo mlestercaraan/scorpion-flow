@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    --font-inter: 'Inter', sans-serif;
+    --font-montserrat: 'Montserrat', sans-serif;
     --background: 220 20% 97%;
-    --foreground: 222 47% 8%;
+    --foreground: 222 47% 4%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 222 47% 5%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 215 50% 23%;
+    --popover-foreground: 222 47% 5%;
+    --primary: 215 50% 18%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 174 42% 51%;
+    --secondary: 174 50% 38%;
     --secondary-foreground: 0 0% 100%;
     --muted: 220 14% 92%;
-    --muted-foreground: 220 15% 28%;
-    --accent: 38 92% 50%;
+    --muted-foreground: 220 15% 18%;
+    --accent: 38 92% 42%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
-    --ring: 215 50% 23%;
+    --border: 220 13% 82%;
+    --input: 220 13% 82%;
+    --ring: 215 50% 18%;
     --chart-1: 215 50% 23%;
     --chart-2: 174 42% 51%;
     --chart-3: 38 92% 50%;
@@ -44,17 +44,17 @@
 
   .dark {
     --background: 222 47% 8%;
-    --foreground: 0 0% 95%;
+    --foreground: 0 0% 98%;
     --card: 222 40% 12%;
-    --card-foreground: 0 0% 95%;
+    --card-foreground: 0 0% 98%;
     --popover: 222 40% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 174 42% 51%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 174 50% 55%;
     --primary-foreground: 222 47% 11%;
-    --secondary: 215 50% 40%;
+    --secondary: 215 50% 45%;
     --secondary-foreground: 0 0% 98%;
     --muted: 222 30% 18%;
-    --muted-foreground: 220 9% 60%;
+    --muted-foreground: 220 12% 75%;
     --accent: 38 92% 50%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
@@ -83,12 +83,18 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-montserrat;
+    /* Bolder default body text — existing semibold/bold/extrabold classes still render heavier than this. */
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 html {
   scroll-behavior: smooth;
+  /* +1px over the browser default of 16px — scales all rem-based Tailwind sizes. */
+  font-size: 17px;
 }
 
 @media print {

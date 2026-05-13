@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientInstance } from '@/lib/query-client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Blueprint from '@/pages/Blueprint';
+import { SessionProvider } from '@/lib/SessionContext';
 
 function NotFound() {
   return (
@@ -24,13 +25,15 @@ function NotFound() {
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Blueprint />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-      <Toaster />
+      <SessionProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Blueprint />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+        <Toaster />
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
