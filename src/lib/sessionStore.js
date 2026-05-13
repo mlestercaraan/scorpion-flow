@@ -1,6 +1,8 @@
 // localStorage-backed CRUD for HubSpot Flow sessions.
 // Pure functions, no React.
 
+import { SCORPION_CLIENT, SCORPION_SECTIONS } from './scorpionSeed';
+
 const SESSIONS_KEY = 'hfs:sessions';
 const ACTIVE_KEY = 'hfs:active';
 
@@ -166,3 +168,15 @@ export function migrateLegacyIfNeeded() {
 export const HUBSPOT_PLANS = ['Free', 'Starter', 'Professional', 'Enterprise'];
 
 export const HUBSPOT_HUBS = ['Marketing', 'Sales', 'Service', 'Content', 'Operations', 'Commerce'];
+
+// First-visit seed: drop in the Scorpion demo session pre-populated across every tab
+// so a brand-new browser landing on the live URL sees a ready-to-present app.
+export function seedScorpionIfEmpty() {
+  if (getSessions().length > 0) return null;
+  const session = createSession(SCORPION_CLIENT);
+  for (const [key, value] of Object.entries(SCORPION_SECTIONS)) {
+    safeWrite(`session:${session.id}:${key}`, value);
+  }
+  setActiveSessionId(session.id);
+  return session;
+}

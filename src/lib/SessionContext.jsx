@@ -15,10 +15,16 @@ export function SessionProvider({ children }) {
         setSessions([migrated]);
         setActiveIdState(migrated.id);
       } else {
-        const fresh = store.createSession({ name: '' });
-        store.setActiveSessionId(fresh.id);
-        setSessions([fresh]);
-        setActiveIdState(fresh.id);
+        const seeded = store.seedScorpionIfEmpty();
+        if (seeded) {
+          setSessions([seeded]);
+          setActiveIdState(seeded.id);
+        } else {
+          const fresh = store.createSession({ name: '' });
+          store.setActiveSessionId(fresh.id);
+          setSessions([fresh]);
+          setActiveIdState(fresh.id);
+        }
       }
     } else if (!activeId || !sessions.find((s) => s.id === activeId)) {
       const fallback = sessions[0].id;
